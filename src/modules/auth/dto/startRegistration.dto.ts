@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNotEmpty, IsString } from 'class-validator';
-import { sourceType } from 'src/lib/models/schema';
+import { sourceType } from 'src/models/schema';
 
-export class RegistrateSystemSubscriptionDto {
+export class StartRegistrationDto {
     // @IsString()
     @ApiProperty({
         required: true,

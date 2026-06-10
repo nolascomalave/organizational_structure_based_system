@@ -2,7 +2,7 @@ import { Injectable, OnModuleDestroy, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { drizzle, type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
-import schema from './models';
+import schema from '../models';
 import { PgTable } from 'drizzle-orm/pg-core';
 // import * as schema from './schema'; // Aquí importas todos tus esquemas
 
