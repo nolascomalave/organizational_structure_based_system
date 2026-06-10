@@ -3,6 +3,8 @@ import AuthRepository from "../../domain/repositories/auth.repository";
 export default class DrizzleAuthRepository implements AuthRepository{
     constructor() {}
 
+    public async startRegistration() {}
+
     public async registrateSystemSubscription() {};
 
     public async createRegistration() {};

@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, HttpStatus, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { RegistrateSystemSubscriptionCommand } from 'src/modules/auth/application/commands/registrate-system_subscription.command';
 import { RegistrateSystemSubscriptionDto } from 'src/modules/auth/shared/dto/registrate-system_subscription.dto';
