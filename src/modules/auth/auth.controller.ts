@@ -1,6 +1,6 @@
 import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { formatValidationErrors } from 'src/shared/infrastructure/http/controllers/exceptionFactory';
-import { StartRegistrationDto } from './dto/startRegistration.dto';
+import { StartRegistrationDto } from './dto/start-registration.dto';
 import { AuthService } from './auth.service';
 
 @Controller("/auth")
