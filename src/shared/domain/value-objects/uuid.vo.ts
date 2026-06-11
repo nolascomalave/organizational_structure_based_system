@@ -6,7 +6,11 @@ export class UUID {
         }
     }
 
-    toString(): string {
+    public static parse(value: UUID | string): UUID {
+        return ((value instanceof UUID) ? value : (new UUID(value)));
+    }
+
+    public toString(): string {
         return this.value;
     }
 }

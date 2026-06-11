@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { DrizzleService } from "src/lib/drizzle.service";
 import { eq, and, isNull, desc, sql } from 'drizzle-orm';
 import { registration, registrationSource, sourceType, SourceType, systemSubscriptionRegistration } from "src/models/schema";
-import { StartRegistrationDto } from './dto/start-registration.dto';
+import { StartRegistrationDto } from './shared/dto/start-registration.dto';
 
 class AuthServicePrivate {
     constructor() {}
