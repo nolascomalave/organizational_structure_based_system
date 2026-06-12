@@ -27,8 +27,12 @@ export default class Registration {
         Object.assign(this, props);
     }
 
-    set setRegistration(props: Omit<Registration, 'registrationSource' | 'ipAddress'>) {
+    public setRegistration(props: Omit<Registration, 'registrationSource' | 'ipAddress'>) {
         Object.assign(this, props);
         this.__setted = true;
+    }
+
+    public getRegistrationSource(): RegistrationSource {
+        return this.registrationSource;
     }
 }

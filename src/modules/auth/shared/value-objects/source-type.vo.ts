@@ -1,7 +1,7 @@
 export default class SourceType {
     constructor(private readonly sourceType: string) {}
 
-    get get(): string {
+    public toString(): string {
         return this.sourceType;
     }
 

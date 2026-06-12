@@ -2,7 +2,7 @@ import { UUID } from "src/shared/domain/value-objects/uuid.vo";
 import SourceType from "../../shared/value-objects/source-type.vo";
 import { StartRegistrationDto } from "../../shared/dto/start-registration.dto";
 
-type RegistrationSourceType = {
+export type RegistrationSourceType = {
     id?: UUID | string;
     sourceType: SourceType | string;
     source: string;
@@ -22,6 +22,10 @@ export default class RegistrationSource {
         props.sourceType = SourceType.parse(props.sourceType);
 
         Object.assign(this, props);
+    }
+
+    public getProperty(property: (keyof RegistrationSourceType)) {
+        return this[property];
     }
 
     public static parse(props: StartRegistrationDto | RegistrationSource) {
