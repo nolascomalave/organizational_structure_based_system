@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Ip, Post, UsePipes, ValidationPipe } from '@nestjs/common';
-import { formatValidationErrors } from 'src/shared/infrastructure/http/controllers/exceptionFactory';
+import { formatValidationErrors } from 'src/shared/interface/http/controllers/exceptionFactory';
 import { StartRegistrationDto } from '../../../shared/dto/start-registration.dto';
 import StartRegistrationCommand from 'src/modules/auth/application/commands/start-registration/command';
 import { CommandBus } from '@nestjs/cqrs';

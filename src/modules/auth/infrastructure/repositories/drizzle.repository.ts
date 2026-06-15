@@ -1,0 +1,2 @@
+export { DrizzleRegistrationSourceRepository as RegistrationSourceRepository } from './registration-source/drizzle-registration-source.repository';
+export { DrizzleRegistrationRepository as RegistrationRepository } from './registration/drizzle-registration.repository';

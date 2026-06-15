@@ -1,12 +1,12 @@
 import { UUID } from "src/shared/domain/value-objects/uuid.vo";
-import Registration from "../../domain/aggregates/registration.aggregate";
-import RegistrationRepository from "../../domain/repositories/registration.repository";
-import type RegistrationSourceRepository from "../../domain/repositories/registration-source.repository";
+import Registration from "../../../domain/aggregates/registration.aggregate";
+import RegistrationRepository from "../../../domain/repositories/registration.repository";
+import type RegistrationSourceRepository from "../../../domain/repositories/registration-source.repository";
 import { DrizzleService } from "src/lib/drizzle.service";
 import { Inject, Injectable } from "@nestjs/common";
 
 @Injectable()
-export default class DrizzleRegistrationRepository implements RegistrationRepository {
+export class DrizzleRegistrationRepository implements RegistrationRepository {
     constructor(
         @Inject('RegistrationSourceRepository')
         private readonly registrationSourceRepository: RegistrationSourceRepository,

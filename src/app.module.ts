@@ -11,6 +11,8 @@ import { AuthModule } from './modules/auth/auth.module';
     // Modules:
     AuthModule
   ],
-  providers: [AppService],
+  providers: [
+    AppService
+  ],
 })
 export class AppModule {}

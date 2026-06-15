@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
-import DrizzleRegistrationRepository from "./infrastructure/repositories/drizzle-registration.repository";
 import { CqrsModule } from "@nestjs/cqrs";
 import { AuthController } from "./interface/http/controllers/auth.controller";
 import StartRegistrationHandler from "./application/commands/start-registration/handler";
-import DrizzleRegistrationSourceRepository from "./infrastructure/repositories/drizle-registration-source.repository";
+import { RegistrationRepository } from "./infrastructure/repositories";
+import { RegistrationSourceRepository } from "./infrastructure/repositories";
+import { TransactionManagerRepository } from "src/shared/infrastructure/repositories/";
 
 @Module({
     controllers: [
@@ -13,11 +14,15 @@ import DrizzleRegistrationSourceRepository from "./infrastructure/repositories/d
         StartRegistrationHandler,
         {
             provide: 'RegistrationSourceRepository', // token que se inyecta en el handler
-            useClass: DrizzleRegistrationSourceRepository, // implementación concreta
+            useClass: RegistrationSourceRepository, // implementación concreta
         },
         {
             provide: 'RegistrationRepository', // token que se inyecta en el handler
-            useClass: DrizzleRegistrationRepository, // implementación concreta
+            useClass: RegistrationRepository, // implementación concreta
+        },
+        {
+            provide: 'TransactionManagerRepository', // token que se inyecta en el handler
+            useClass: TransactionManagerRepository, // implementación concreta
         },
     ],
     imports: [CqrsModule],

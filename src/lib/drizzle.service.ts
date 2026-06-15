@@ -4,7 +4,7 @@ import { drizzle, type PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import schema from '../models';
 import { PgTable } from 'drizzle-orm/pg-core';
-// import * as schema from './schema'; // Aquí importas todos tus esquemas
+import { DrizzleDB, DrizzleDBOrTransaction, DrizzleTransaction } from './drizzle-transaction';
 
 @Injectable()
 export class DrizzleService implements OnModuleDestroy {
@@ -39,5 +39,9 @@ export class DrizzleService implements OnModuleDestroy {
         this.logger.log('Closing database connection...');
         // await this.db.$client.end(); // Cierra la conexión al detener la app
         await this.queryClient.end();
+    }
+
+    async handleTransaction<T>(tx: DrizzleDBOrTransaction | undefined, callback: (db: DrizzleDBOrTransaction) => Promise<T>): Promise<T> {
+        return (await callback(!tx ? this.db : tx));
     }
 }

@@ -13,6 +13,6 @@ export default interface RegistrationSourceRepository {
         id?: string;
         sourceType: string;
         source: string;
-    }): Promise<SaveReturnType>
-    findBySource(props: StartRegistrationDto): Promise<SaveReturnType | null>
+    }, db?: any): Promise<SaveReturnType>
+    findBySource(props: StartRegistrationDto, db?: any): Promise<SaveReturnType | null>
 }
