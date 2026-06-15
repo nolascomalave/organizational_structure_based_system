@@ -8,11 +8,12 @@ import { PgTransaction } from 'drizzle-orm/pg-core';
 import { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js';
 import { ExtractTablesWithRelations } from 'drizzle-orm';
 import type TransactionManagerRepository from 'src/shared/domain/repositories/transaction-manager.repository';
+import { REGISTRATION_REPOSITORY } from 'src/modules/auth/domain/repositories/registration.repository';
 
 @CommandHandler(StartRegistrationCommand)
 export default class StartRegistrationHandler implements ICommandHandler<StartRegistrationCommand> {
     constructor(
-        @Inject('RegistrationRepository')
+        @Inject(REGISTRATION_REPOSITORY)
         private readonly registrationRepository: RegistrationRepository,
         @Inject('RegistrationSourceRepository')
         private readonly registrationSourceRepository: RegistrationSourceRepository,

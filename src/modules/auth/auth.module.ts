@@ -17,7 +17,7 @@ import { TransactionManagerRepository } from "src/shared/infrastructure/reposito
             useClass: RegistrationSourceRepository, // implementación concreta
         },
         {
-            provide: 'RegistrationRepository', // token que se inyecta en el handler
+            provide: 'REGISTRATION_REPOSITORY', // token que se inyecta en el handler
             useClass: RegistrationRepository, // implementación concreta
         },
         {
