@@ -1,5 +1,7 @@
 import { StartRegistrationDto } from "../../shared/dto/start-registration.dto";
 
+export const REGISTRATION_SOURCE_REPOSITORY = Symbol("REGISTRATION_SOURCE_REPOSITORY");
+
 export type SaveReturnType = {
     id: string;
     sourceType: string;

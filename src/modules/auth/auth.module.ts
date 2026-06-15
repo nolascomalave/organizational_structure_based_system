@@ -5,6 +5,8 @@ import StartRegistrationHandler from "./application/commands/start-registration/
 import { RegistrationRepository } from "./infrastructure/repositories";
 import { RegistrationSourceRepository } from "./infrastructure/repositories";
 import { TransactionManagerRepository } from "src/shared/infrastructure/repositories/";
+import { REGISTRATION_REPOSITORY } from "./domain/repositories/registration.repository";
+import { REGISTRATION_SOURCE_REPOSITORY } from "./domain/repositories/registration-source.repository";
 
 @Module({
     controllers: [
@@ -13,16 +15,12 @@ import { TransactionManagerRepository } from "src/shared/infrastructure/reposito
     providers: [
         StartRegistrationHandler,
         {
-            provide: 'RegistrationSourceRepository', // token que se inyecta en el handler
-            useClass: RegistrationSourceRepository, // implementación concreta
-        },
-        {
-            provide: 'REGISTRATION_REPOSITORY', // token que se inyecta en el handler
+            provide: REGISTRATION_REPOSITORY, // token que se inyecta en el handler
             useClass: RegistrationRepository, // implementación concreta
         },
         {
-            provide: 'TransactionManagerRepository', // token que se inyecta en el handler
-            useClass: TransactionManagerRepository, // implementación concreta
+            provide: REGISTRATION_SOURCE_REPOSITORY, // token que se inyecta en el handler
+            useClass: RegistrationSourceRepository, // implementación concreta
         },
     ],
     imports: [CqrsModule],

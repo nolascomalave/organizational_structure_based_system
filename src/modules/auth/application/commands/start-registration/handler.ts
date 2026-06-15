@@ -3,21 +3,19 @@ import StartRegistrationCommand from './command';
 import { Inject } from '@nestjs/common';
 import type RegistrationRepository from 'src/modules/auth/domain/repositories/registration.repository';
 import type RegistrationSourceRepository from 'src/modules/auth/domain/repositories/registration-source.repository';
-import { DrizzleService } from 'src/lib/drizzle.service';
-import { PgTransaction } from 'drizzle-orm/pg-core';
-import { PostgresJsQueryResultHKT } from 'drizzle-orm/postgres-js';
-import { ExtractTablesWithRelations } from 'drizzle-orm';
-import type TransactionManagerRepository from 'src/shared/domain/repositories/transaction-manager.repository';
+import type TransactionManagerRepository from 'src/shared/application/repositories/transaction-manager.repository';
 import { REGISTRATION_REPOSITORY } from 'src/modules/auth/domain/repositories/registration.repository';
+import { REGISTRATION_SOURCE_REPOSITORY } from 'src/modules/auth/domain/repositories/registration-source.repository';
+import { TRANSACTION_MANAGER_REPOSITORY } from 'src/shared/application/repositories/transaction-manager.repository';
 
 @CommandHandler(StartRegistrationCommand)
 export default class StartRegistrationHandler implements ICommandHandler<StartRegistrationCommand> {
     constructor(
         @Inject(REGISTRATION_REPOSITORY)
         private readonly registrationRepository: RegistrationRepository,
-        @Inject('RegistrationSourceRepository')
+        @Inject(REGISTRATION_SOURCE_REPOSITORY)
         private readonly registrationSourceRepository: RegistrationSourceRepository,
-        @Inject('TransactionManagerRepository')
+        @Inject(TRANSACTION_MANAGER_REPOSITORY)
         private readonly transactionManagerRepository: TransactionManagerRepository,
     ) {}
 

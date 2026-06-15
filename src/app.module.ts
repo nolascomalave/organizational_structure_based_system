@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppService } from './app.service';
 import { DrizzleModule } from './lib/drizzle.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { TransactionManagerModule } from './shared/infrastructure/transaction-manager.module';
 
 @Module({
   imports: [
@@ -9,7 +10,10 @@ import { AuthModule } from './modules/auth/auth.module';
     DrizzleModule,
 
     // Modules:
-    AuthModule
+    AuthModule,
+
+    // Application Modules:
+    TransactionManagerModule
   ],
   providers: [
     AppService

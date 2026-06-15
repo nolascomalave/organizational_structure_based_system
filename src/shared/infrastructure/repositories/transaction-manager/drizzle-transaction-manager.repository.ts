@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { DrizzleTransaction } from "src/lib/drizzle-transaction";
 import { DrizzleService } from "src/lib/drizzle.service";
-import TransactionManagerRepository from "src/shared/domain/repositories/transaction-manager.repository";
+import TransactionManagerRepository from "src/shared/application/repositories/transaction-manager.repository";
 
 @Injectable()
 export class DrizzleTransactionManagerRepository implements TransactionManagerRepository {
