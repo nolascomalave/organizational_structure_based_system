@@ -21,12 +21,18 @@ export default class StartRegistrationHandler implements ICommandHandler<StartRe
 
     async execute(command: StartRegistrationCommand) {
         return await this.transactionManagerRepository.execute(async (tx) => {
-            const registrationSource = await this.registrationSourceRepository.save({
+            /* const registrationSource = await this.registrationSourceRepository.save({
                 sourceType: command.source_type,
                 source: command.source
             }, tx);
 
-            return registrationSource.id;
+            return registrationSource.id; */
+
+            return (await this.registrationRepository.save({
+                source_type: command.source_type,
+                source: command.source,
+                ipAddress: command.ip_address
+            })).id;
         });
     }
 }

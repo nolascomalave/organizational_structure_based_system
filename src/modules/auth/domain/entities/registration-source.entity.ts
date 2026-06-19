@@ -11,11 +11,11 @@ export type RegistrationSourceType = {
 }
 
 export default class RegistrationSource {
-    private readonly id?: UUID;
-    private readonly sourceType: SourceType;
-    private readonly source: string;
-    private readonly createdAt?: Date;
-    private readonly deletedAt?: Date;
+    readonly id?: UUID;
+    readonly sourceType: SourceType;
+    readonly source: string;
+    readonly createdAt?: Date;
+    readonly deletedAt?: Date;
 
     constructor(props: RegistrationSourceType) {
         props.id = !props.id ? undefined : UUID.parse(props.id);

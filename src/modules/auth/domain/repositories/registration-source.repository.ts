@@ -1,4 +1,5 @@
 import { StartRegistrationDto } from "../../shared/dto/start-registration.dto";
+import RegistrationSource from "../entities/registration-source.entity";
 
 export const REGISTRATION_SOURCE_REPOSITORY = Symbol("REGISTRATION_SOURCE_REPOSITORY");
 
@@ -11,10 +12,9 @@ export type SaveReturnType = {
 }
 
 export default interface RegistrationSourceRepository {
-    save(registrationSource: {
-        id?: string;
+    save(props: {
         sourceType: string;
         source: string;
-    }, db?: any): Promise<SaveReturnType>
-    findBySource(props: StartRegistrationDto, db?: any): Promise<SaveReturnType | null>
+    } | RegistrationSource, db?: any): Promise<RegistrationSource>
+    findBySource(props: StartRegistrationDto, db?: any): Promise<RegistrationSource | null>
 }

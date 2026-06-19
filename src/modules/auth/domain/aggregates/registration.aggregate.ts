@@ -13,26 +13,38 @@ type RegistrationType = {
 };
 
 export default class Registration {
-    private readonly id?: UUID;
-    private readonly registrationSource: RegistrationSource;
-    private readonly ipAddress: IpAddress;
-    private readonly confirmRegistrationAt?: Date;
-    private readonly createdAt: Date;
-    private readonly expiredAt: Date;
-    private readonly deletedAt?: Date;
+    readonly id: RegistrationType["id"];
+    readonly registrationSource: RegistrationType["registrationSource"];
+    readonly ipAddress: RegistrationType["ipAddress"];
+    readonly confirmRegistrationAt: RegistrationType["confirmRegistrationAt"];
+    readonly createdAt: RegistrationType["createdAt"];
+    readonly expiredAt: RegistrationType["expiredAt"];
+    readonly deletedAt: RegistrationType["deletedAt"];
 
-    private __setted: boolean = false;
+    // private __setted: RegistrationType["__setted"] = false;
 
-    constructor(props: RegistrationType) {
+    constructor(props: RegistrationType/* { [key in (keyof Registration)]: Registration[keyof Registration] } */) {
         Object.assign(this, props);
     }
 
-    public setRegistration(props: Omit<Registration, 'registrationSource' | 'ipAddress'>) {
+    public getProperty(property: (keyof Registration)) {
+        return (this[property] as Registration[keyof Registration]);
+    }
+
+    public isIdSetted(): boolean {
+        return !!this.id;
+    }
+
+    public setProperty(property: (keyof Registration), value: Registration[keyof Registration]): Registration[keyof Registration] {
+        return ((this[property] as Registration[keyof Registration]) = value);
+    }
+
+    /* public setRegistration(props: Omit<Registration, 'registrationSource' | 'ipAddress'>) {
         Object.assign(this, props);
         this.__setted = true;
-    }
+    } */
 
-    public getRegistrationSource(): RegistrationSource {
+    /* public getRegistrationSource(): RegistrationSource {
         return this.registrationSource;
-    }
+    } */
 }

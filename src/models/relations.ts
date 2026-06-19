@@ -2,7 +2,7 @@ import { relations } from "drizzle-orm/relations";
 import { region, subregion, country, state, city, systemSubscription, systemSubscriptionValidity, phone, auditLog, userAccess, session, systemSubscriptionOwner, entity, systemSubscriptionClient, systemClient, emailByEntity, userAccessValidity, recoveryPassword, recoveryPasswordNotify, phoneByEntity, naturalEntityGender, naturalEntity, identityDocumentCategory, identityDocument, identityDocumentByEntity, entityNameType, entityName, entityNameByEntity, entityAddress, email, department, jobFamily, position, employee, employeeValidity, employeePerPosition, employeePerPositionValidity, shareholding, shareholdingValidity, subsidiary, subsidiaryValidity, branch, identityDocumentByEntityByBranch, entityAddressByBranch, phoneByEntityByBranch, emailByEntityByBranch, attachedDocuments, sourceTypeVerificationMethod, sourceTypeVerificationMethodValidity, registrationSource, registration, registrationSourceVerification, systemSubscriptionRegistration } from "./schema";
 
 export const subregionRelations = relations(subregion, ({one, many}) => ({
-	regionInOsb: one(region, {
+	region: one(region, {
 		fields: [subregion.regionId],
 		references: [region.id]
 	}),
@@ -19,11 +19,11 @@ export const regionRelations = relations(region, ({many}) => ({
 }));
 
 export const countryRelations = relations(country, ({one, many}) => ({
-	regionInOsb: one(region, {
+	region: one(region, {
 		fields: [country.regionId],
 		references: [region.id]
 	}),
-	subregionInOsb: one(subregion, {
+	subregion: one(subregion, {
 		fields: [country.subregionId],
 		references: [subregion.id]
 	}),
@@ -35,7 +35,7 @@ export const countryRelations = relations(country, ({one, many}) => ({
 }));
 
 export const stateRelations = relations(state, ({one, many}) => ({
-	countryInOsb: one(country, {
+	country: one(country, {
 		fields: [state.countryId],
 		references: [country.id]
 	}),
@@ -46,11 +46,11 @@ export const stateRelations = relations(state, ({one, many}) => ({
 }));
 
 export const cityRelations = relations(city, ({one, many}) => ({
-	countryInOsb: one(country, {
+	country: one(country, {
 		fields: [city.countryId],
 		references: [country.id]
 	}),
-	stateInOsb: one(state, {
+	state: one(state, {
 		fields: [city.stateId],
 		references: [state.id]
 	}),
@@ -59,7 +59,7 @@ export const cityRelations = relations(city, ({one, many}) => ({
 }));
 
 export const systemSubscriptionValidityRelations = relations(systemSubscriptionValidity, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [systemSubscriptionValidity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
@@ -108,11 +108,11 @@ export const systemSubscriptionRelations = relations(systemSubscription, ({many}
 }));
 
 export const phoneRelations = relations(phone, ({one, many}) => ({
-	countryInOsb: one(country, {
+	country: one(country, {
 		fields: [phone.countryId],
 		references: [country.id]
 	}),
-	stateInOsb: one(state, {
+	state: one(state, {
 		fields: [phone.stateId],
 		references: [state.id]
 	}),
@@ -120,15 +120,15 @@ export const phoneRelations = relations(phone, ({one, many}) => ({
 }));
 
 export const auditLogRelations = relations(auditLog, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [auditLog.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	userAccessInTenant: one(userAccess, {
+	userAccess: one(userAccess, {
 		fields: [auditLog.userAccessId],
 		references: [userAccess.id]
 	}),
-	sessionInTenant: one(session, {
+	session: one(session, {
 		fields: [auditLog.sessionId],
 		references: [session.id]
 	}),
@@ -136,15 +136,15 @@ export const auditLogRelations = relations(auditLog, ({one}) => ({
 
 export const userAccessRelations = relations(userAccess, ({one, many}) => ({
 	auditLog: many(auditLog),
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [userAccess.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	systemSubscriptionClientInTenant: one(systemSubscriptionClient, {
+	systemSubscriptionClient: one(systemSubscriptionClient, {
 		fields: [userAccess.systemSubscriptionClientId],
 		references: [systemSubscriptionClient.id]
 	}),
-	emailByEntityInTenant: one(emailByEntity, {
+	emailByEntity: one(emailByEntity, {
 		fields: [userAccess.emailByEntityId],
 		references: [emailByEntity.id]
 	}),
@@ -155,22 +155,22 @@ export const userAccessRelations = relations(userAccess, ({one, many}) => ({
 
 export const sessionRelations = relations(session, ({one, many}) => ({
 	auditLog: many(auditLog),
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [session.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	userAccessInTenant: one(userAccess, {
+	userAccess: one(userAccess, {
 		fields: [session.userAccessId],
 		references: [userAccess.id]
 	}),
 }));
 
 export const systemSubscriptionOwnerRelations = relations(systemSubscriptionOwner, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [systemSubscriptionOwner.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	entityInTenant: one(entity, {
+	entity: one(entity, {
 		fields: [systemSubscriptionOwner.entityId],
 		references: [entity.id]
 	}),
@@ -178,11 +178,11 @@ export const systemSubscriptionOwnerRelations = relations(systemSubscriptionOwne
 
 export const entityRelations = relations(entity, ({one, many}) => ({
 	systemSubscriptionOwner: many(systemSubscriptionOwner),
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [entity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	entityInTenant: one(entity, {
+	entityFusionMaster: one(entity, {
 		fields: [entity.fusionMasterEntityId],
 		references: [entity.id],
 		relationName: "entity_fusionMasterEntityId_entity_id"
@@ -221,11 +221,11 @@ export const entityRelations = relations(entity, ({one, many}) => ({
 }));
 
 export const systemSubscriptionClientRelations = relations(systemSubscriptionClient, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [systemSubscriptionClient.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	systemClientInOsb: one(systemClient, {
+	systemClient: one(systemClient, {
 		fields: [systemSubscriptionClient.systemClientId],
 		references: [systemClient.id]
 	}),
@@ -239,15 +239,15 @@ export const systemClientRelations = relations(systemClient, ({many}) => ({
 export const emailByEntityRelations = relations(emailByEntity, ({one, many}) => ({
 	userAccess: many(userAccess),
 	recoveryPasswordNotify: many(recoveryPasswordNotify),
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [emailByEntity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	emailInOsb: one(email, {
+	email: one(email, {
 		fields: [emailByEntity.emailId],
 		references: [email.id]
 	}),
-	entityInTenant: one(entity, {
+	entity: one(entity, {
 		fields: [emailByEntity.entityId],
 		references: [entity.id]
 	}),
@@ -255,22 +255,22 @@ export const emailByEntityRelations = relations(emailByEntity, ({one, many}) => 
 }));
 
 export const userAccessValidityRelations = relations(userAccessValidity, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [userAccessValidity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	userAccessInTenant: one(userAccess, {
+	userAccess: one(userAccess, {
 		fields: [userAccessValidity.userAccessId],
 		references: [userAccess.id]
 	}),
 }));
 
 export const recoveryPasswordRelations = relations(recoveryPassword, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [recoveryPassword.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	userAccessInTenant: one(userAccess, {
+	userAccess: one(userAccess, {
 		fields: [recoveryPassword.userAccessId],
 		references: [userAccess.id]
 	}),
@@ -278,19 +278,19 @@ export const recoveryPasswordRelations = relations(recoveryPassword, ({one, many
 }));
 
 export const recoveryPasswordNotifyRelations = relations(recoveryPasswordNotify, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [recoveryPasswordNotify.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	recoveryPasswordInTenant: one(recoveryPassword, {
+	recoveryPassword: one(recoveryPassword, {
 		fields: [recoveryPasswordNotify.recoveryPasswordId],
 		references: [recoveryPassword.id]
 	}),
-	phoneByEntityInTenant: one(phoneByEntity, {
+	phoneByEntity: one(phoneByEntity, {
 		fields: [recoveryPasswordNotify.phoneByEntityId],
 		references: [phoneByEntity.id]
 	}),
-	emailByEntityInTenant: one(emailByEntity, {
+	emailByEntity: one(emailByEntity, {
 		fields: [recoveryPasswordNotify.emailByEntityId],
 		references: [emailByEntity.id]
 	}),
@@ -298,15 +298,15 @@ export const recoveryPasswordNotifyRelations = relations(recoveryPasswordNotify,
 
 export const phoneByEntityRelations = relations(phoneByEntity, ({one, many}) => ({
 	recoveryPasswordNotify: many(recoveryPasswordNotify),
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [phoneByEntity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	phoneInOsb: one(phone, {
+	phone: one(phone, {
 		fields: [phoneByEntity.phoneId],
 		references: [phone.id]
 	}),
-	entityInTenant: one(entity, {
+	entity: one(entity, {
 		fields: [phoneByEntity.entityId],
 		references: [entity.id]
 	}),
@@ -314,7 +314,7 @@ export const phoneByEntityRelations = relations(phoneByEntity, ({one, many}) => 
 }));
 
 export const naturalEntityGenderRelations = relations(naturalEntityGender, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [naturalEntityGender.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
@@ -322,26 +322,26 @@ export const naturalEntityGenderRelations = relations(naturalEntityGender, ({one
 }));
 
 export const naturalEntityRelations = relations(naturalEntity, ({one}) => ({
-	entityInTenant: one(entity, {
+	entity: one(entity, {
 		fields: [naturalEntity.entityId],
 		references: [entity.id]
 	}),
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [naturalEntity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	naturalEntityGenderInTenant: one(naturalEntityGender, {
+	naturalEntityGender: one(naturalEntityGender, {
 		fields: [naturalEntity.naturalEntityGenderId],
 		references: [naturalEntityGender.id]
 	}),
 }));
 
 export const identityDocumentCategoryRelations = relations(identityDocumentCategory, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [identityDocumentCategory.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	identityDocumentCategoryInTenant: one(identityDocumentCategory, {
+	identityDocumentCategoryParent: one(identityDocumentCategory, {
 		fields: [identityDocumentCategory.parentId],
 		references: [identityDocumentCategory.id],
 		relationName: "identityDocumentCategory_parentId_identityDocumentCategory_id"
@@ -349,23 +349,23 @@ export const identityDocumentCategoryRelations = relations(identityDocumentCateg
 	identityDocumentCategory: many(identityDocumentCategory, {
 		relationName: "identityDocumentCategory_parentId_identityDocumentCategory_id"
 	}),
-	regionInOsb: one(region, {
+	region: one(region, {
 		fields: [identityDocumentCategory.regionId],
 		references: [region.id]
 	}),
-	subregionInOsb: one(subregion, {
+	subregion: one(subregion, {
 		fields: [identityDocumentCategory.subregionId],
 		references: [subregion.id]
 	}),
-	countryInOsb: one(country, {
+	country: one(country, {
 		fields: [identityDocumentCategory.countryId],
 		references: [country.id]
 	}),
-	stateInOsb: one(state, {
+	state: one(state, {
 		fields: [identityDocumentCategory.stateId],
 		references: [state.id]
 	}),
-	cityInOsb: one(city, {
+	city: one(city, {
 		fields: [identityDocumentCategory.cityId],
 		references: [city.id]
 	}),
@@ -373,11 +373,11 @@ export const identityDocumentCategoryRelations = relations(identityDocumentCateg
 }));
 
 export const identityDocumentRelations = relations(identityDocument, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [identityDocument.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	identityDocumentCategoryInTenant: one(identityDocumentCategory, {
+	identityDocumentCategory: one(identityDocumentCategory, {
 		fields: [identityDocument.identityDocumentCategoryId],
 		references: [identityDocumentCategory.id]
 	}),
@@ -385,15 +385,15 @@ export const identityDocumentRelations = relations(identityDocument, ({one, many
 }));
 
 export const identityDocumentByEntityRelations = relations(identityDocumentByEntity, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [identityDocumentByEntity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	entityInTenant: one(entity, {
+	entity: one(entity, {
 		fields: [identityDocumentByEntity.entityId],
 		references: [entity.id]
 	}),
-	identityDocumentInTenant: one(identityDocument, {
+	identityDocument: one(identityDocument, {
 		fields: [identityDocumentByEntity.identityDocumentId],
 		references: [identityDocument.id]
 	}),
@@ -401,7 +401,7 @@ export const identityDocumentByEntityRelations = relations(identityDocumentByEnt
 }));
 
 export const entityNameTypeRelations = relations(entityNameType, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [entityNameType.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
@@ -409,7 +409,7 @@ export const entityNameTypeRelations = relations(entityNameType, ({one, many}) =
 }));
 
 export const entityNameRelations = relations(entityName, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [entityName.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
@@ -417,50 +417,50 @@ export const entityNameRelations = relations(entityName, ({one, many}) => ({
 }));
 
 export const entityNameByEntityRelations = relations(entityNameByEntity, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [entityNameByEntity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	entityInTenant: one(entity, {
+	entity: one(entity, {
 		fields: [entityNameByEntity.entityId],
 		references: [entity.id]
 	}),
-	entityNameInTenant: one(entityName, {
+	entityName: one(entityName, {
 		fields: [entityNameByEntity.entityNameId],
 		references: [entityName.id]
 	}),
-	entityNameTypeInTenant: one(entityNameType, {
+	entityNameType: one(entityNameType, {
 		fields: [entityNameByEntity.entityNameTypeId],
 		references: [entityNameType.id]
 	}),
 }));
 
 export const entityAddressRelations = relations(entityAddress, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [entityAddress.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	regionInOsb: one(region, {
+	region: one(region, {
 		fields: [entityAddress.regionId],
 		references: [region.id]
 	}),
-	subregionInOsb: one(subregion, {
+	subregion: one(subregion, {
 		fields: [entityAddress.subregionId],
 		references: [subregion.id]
 	}),
-	countryInOsb: one(country, {
+	country: one(country, {
 		fields: [entityAddress.countryId],
 		references: [country.id]
 	}),
-	stateInOsb: one(state, {
+	state: one(state, {
 		fields: [entityAddress.stateId],
 		references: [state.id]
 	}),
-	cityInOsb: one(city, {
+	city: one(city, {
 		fields: [entityAddress.cityId],
 		references: [city.id]
 	}),
-	entityInTenant: one(entity, {
+	entity: one(entity, {
 		fields: [entityAddress.entityId],
 		references: [entity.id]
 	}),
@@ -472,15 +472,15 @@ export const emailRelations = relations(email, ({many}) => ({
 }));
 
 export const departmentRelations = relations(department, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [department.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	entityInTenant: one(entity, {
+	entity: one(entity, {
 		fields: [department.entityId],
 		references: [entity.id]
 	}),
-	departmentInTenant: one(department, {
+	departmentParent: one(department, {
 		fields: [department.parentId],
 		references: [department.id],
 		relationName: "department_parentId_department_id"
@@ -492,11 +492,11 @@ export const departmentRelations = relations(department, ({one, many}) => ({
 }));
 
 export const jobFamilyRelations = relations(jobFamily, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [jobFamily.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	entityInTenant: one(entity, {
+	entity: one(entity, {
 		fields: [jobFamily.entityId],
 		references: [entity.id]
 	}),
@@ -504,15 +504,15 @@ export const jobFamilyRelations = relations(jobFamily, ({one, many}) => ({
 }));
 
 export const positionRelations = relations(position, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [position.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	entityInTenant: one(entity, {
+	entity: one(entity, {
 		fields: [position.entityId],
 		references: [entity.id]
 	}),
-	positionInTenant: one(position, {
+	positionParent: one(position, {
 		fields: [position.parentId],
 		references: [position.id],
 		relationName: "position_parentId_position_id"
@@ -520,11 +520,11 @@ export const positionRelations = relations(position, ({one, many}) => ({
 	position: many(position, {
 		relationName: "position_parentId_position_id"
 	}),
-	jobFamilyInTenant: one(jobFamily, {
+	jobFamily: one(jobFamily, {
 		fields: [position.jobFamilyId],
 		references: [jobFamily.id]
 	}),
-	departmentInTenant: one(department, {
+	department: one(department, {
 		fields: [position.departmentId],
 		references: [department.id]
 	}),
@@ -533,16 +533,16 @@ export const positionRelations = relations(position, ({one, many}) => ({
 }));
 
 export const employeeRelations = relations(employee, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [employee.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	entityInTenant_personEntityId: one(entity, {
+	entity_personEntityId: one(entity, {
 		fields: [employee.personEntityId],
 		references: [entity.id],
 		relationName: "employee_personEntityId_entity_id"
 	}),
-	entityInTenant_legalEntityId: one(entity, {
+	entity_legalEntityId: one(entity, {
 		fields: [employee.legalEntityId],
 		references: [entity.id],
 		relationName: "employee_legalEntityId_entity_id"
@@ -552,26 +552,26 @@ export const employeeRelations = relations(employee, ({one, many}) => ({
 }));
 
 export const employeeValidityRelations = relations(employeeValidity, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [employeeValidity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	employeeInTenant: one(employee, {
+	employee: one(employee, {
 		fields: [employeeValidity.employeeId],
 		references: [employee.id]
 	}),
 }));
 
 export const employeePerPositionRelations = relations(employeePerPosition, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [employeePerPosition.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	employeeInTenant: one(employee, {
+	employee: one(employee, {
 		fields: [employeePerPosition.employeeId],
 		references: [employee.id]
 	}),
-	positionInTenant: one(position, {
+	position: one(position, {
 		fields: [employeePerPosition.positionId],
 		references: [position.id]
 	}),
@@ -579,27 +579,27 @@ export const employeePerPositionRelations = relations(employeePerPosition, ({one
 }));
 
 export const employeePerPositionValidityRelations = relations(employeePerPositionValidity, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [employeePerPositionValidity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	employeePerPositionInTenant: one(employeePerPosition, {
+	employeePerPosition: one(employeePerPosition, {
 		fields: [employeePerPositionValidity.employeePerPositionId],
 		references: [employeePerPosition.id]
 	}),
 }));
 
 export const shareholdingRelations = relations(shareholding, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [shareholding.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	entityInTenant_entityId: one(entity, {
+	entity_entityId: one(entity, {
 		fields: [shareholding.entityId],
 		references: [entity.id],
 		relationName: "shareholding_entityId_entity_id"
 	}),
-	entityInTenant_shareholerEntityId: one(entity, {
+	entity_shareholerEntityId: one(entity, {
 		fields: [shareholding.shareholerEntityId],
 		references: [entity.id],
 		relationName: "shareholding_shareholerEntityId_entity_id"
@@ -608,27 +608,27 @@ export const shareholdingRelations = relations(shareholding, ({one, many}) => ({
 }));
 
 export const shareholdingValidityRelations = relations(shareholdingValidity, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [shareholdingValidity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	shareholdingInTenant: one(shareholding, {
+	shareholding: one(shareholding, {
 		fields: [shareholdingValidity.shareholdingId],
 		references: [shareholding.id]
 	}),
 }));
 
 export const subsidiaryRelations = relations(subsidiary, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [subsidiary.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	entityInTenant_entityId: one(entity, {
+	entity_entityId: one(entity, {
 		fields: [subsidiary.entityId],
 		references: [entity.id],
 		relationName: "subsidiary_entityId_entity_id"
 	}),
-	entityInTenant_parentEntityId: one(entity, {
+	entity_parentEntityId: one(entity, {
 		fields: [subsidiary.parentEntityId],
 		references: [entity.id],
 		relationName: "subsidiary_parentEntityId_entity_id"
@@ -638,26 +638,26 @@ export const subsidiaryRelations = relations(subsidiary, ({one, many}) => ({
 }));
 
 export const subsidiaryValidityRelations = relations(subsidiaryValidity, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [subsidiaryValidity.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	subsidiaryInTenant: one(subsidiary, {
+	subsidiary: one(subsidiary, {
 		fields: [subsidiaryValidity.subsidiaryId],
 		references: [subsidiary.id]
 	}),
 }));
 
 export const branchRelations = relations(branch, ({one, many}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [branch.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	entityInTenant: one(entity, {
+	entity: one(entity, {
 		fields: [branch.entityId],
 		references: [entity.id]
 	}),
-	branchInTenant: one(branch, {
+	branchParent: one(branch, {
 		fields: [branch.parentId],
 		references: [branch.id],
 		relationName: "branch_parentId_branch_id"
@@ -665,11 +665,11 @@ export const branchRelations = relations(branch, ({one, many}) => ({
 	branch: many(branch, {
 		relationName: "branch_parentId_branch_id"
 	}),
-	positionInTenant: one(position, {
+	position: one(position, {
 		fields: [branch.positionId],
 		references: [position.id]
 	}),
-	subsidiaryInTenant: one(subsidiary, {
+	subsidiary: one(subsidiary, {
 		fields: [branch.subsidiaryId],
 		references: [subsidiary.id]
 	}),
@@ -680,74 +680,74 @@ export const branchRelations = relations(branch, ({one, many}) => ({
 }));
 
 export const identityDocumentByEntityByBranchRelations = relations(identityDocumentByEntityByBranch, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [identityDocumentByEntityByBranch.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	branchInTenant: one(branch, {
+	branch: one(branch, {
 		fields: [identityDocumentByEntityByBranch.branchId],
 		references: [branch.id]
 	}),
-	identityDocumentByEntityInTenant: one(identityDocumentByEntity, {
+	identityDocumentByEntity: one(identityDocumentByEntity, {
 		fields: [identityDocumentByEntityByBranch.identityDocumentByEntityId],
 		references: [identityDocumentByEntity.id]
 	}),
 }));
 
 export const entityAddressByBranchRelations = relations(entityAddressByBranch, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [entityAddressByBranch.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	branchInTenant: one(branch, {
+	branch: one(branch, {
 		fields: [entityAddressByBranch.branchId],
 		references: [branch.id]
 	}),
-	entityAddressInTenant: one(entityAddress, {
+	entityAddress: one(entityAddress, {
 		fields: [entityAddressByBranch.entityAddressId],
 		references: [entityAddress.id]
 	}),
 }));
 
 export const phoneByEntityByBranchRelations = relations(phoneByEntityByBranch, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [phoneByEntityByBranch.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	branchInTenant: one(branch, {
+	branch: one(branch, {
 		fields: [phoneByEntityByBranch.branchId],
 		references: [branch.id]
 	}),
-	phoneByEntityInTenant: one(phoneByEntity, {
+	phoneByEntity: one(phoneByEntity, {
 		fields: [phoneByEntityByBranch.phoneByEntityId],
 		references: [phoneByEntity.id]
 	}),
 }));
 
 export const emailByEntityByBranchRelations = relations(emailByEntityByBranch, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [emailByEntityByBranch.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	branchInTenant: one(branch, {
+	branch: one(branch, {
 		fields: [emailByEntityByBranch.branchId],
 		references: [branch.id]
 	}),
-	emailByEntityInTenant: one(emailByEntity, {
+	emailByEntity: one(emailByEntity, {
 		fields: [emailByEntityByBranch.emailByEntityId],
 		references: [emailByEntity.id]
 	}),
 }));
 
 export const attachedDocumentsRelations = relations(attachedDocuments, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [attachedDocuments.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
 }));
 
 export const sourceTypeVerificationMethodValidityRelations = relations(sourceTypeVerificationMethodValidity, ({one}) => ({
-	sourceTypeVerificationMethodInOsb: one(sourceTypeVerificationMethod, {
+	sourceTypeVerificationMethod: one(sourceTypeVerificationMethod, {
 		fields: [sourceTypeVerificationMethodValidity.sourceTypeVerificationMethodId],
 		references: [sourceTypeVerificationMethod.id]
 	}),
@@ -759,7 +759,7 @@ export const sourceTypeVerificationMethodRelations = relations(sourceTypeVerific
 }));
 
 export const registrationRelations = relations(registration, ({one, many}) => ({
-	registrationSourceInOsb: one(registrationSource, {
+	registrationSource: one(registrationSource, {
 		fields: [registration.registrationSourceId],
 		references: [registrationSource.id]
 	}),
@@ -772,22 +772,22 @@ export const registrationSourceRelations = relations(registrationSource, ({many}
 }));
 
 export const registrationSourceVerificationRelations = relations(registrationSourceVerification, ({one}) => ({
-	registrationInOsb: one(registration, {
+	registration: one(registration, {
 		fields: [registrationSourceVerification.registrationId],
 		references: [registration.id]
 	}),
-	sourceTypeVerificationMethodInOsb: one(sourceTypeVerificationMethod, {
+	sourceTypeVerificationMethod: one(sourceTypeVerificationMethod, {
 		fields: [registrationSourceVerification.sourceTypeVerificationMethodId],
 		references: [sourceTypeVerificationMethod.id]
 	}),
 }));
 
 export const systemSubscriptionRegistrationRelations = relations(systemSubscriptionRegistration, ({one}) => ({
-	systemSubscriptionInOsb: one(systemSubscription, {
+	systemSubscription: one(systemSubscription, {
 		fields: [systemSubscriptionRegistration.systemSubscriptionId],
 		references: [systemSubscription.id]
 	}),
-	registrationInOsb: one(registration, {
+	registration: one(registration, {
 		fields: [systemSubscriptionRegistration.registrationId],
 		references: [registration.id]
 	}),
