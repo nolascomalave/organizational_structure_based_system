@@ -1,5 +1,4 @@
 // domain/__tests__/registration-source.entity.spec.ts
-import { registrationSource } from 'src/models/schema';
 import Registration from './registration.aggregate';
 import { IpAddress } from '../../shared/value-objects/ip-address.vo';
 import RegistrationSource from '../entities/registration-source.entity';
