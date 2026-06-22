@@ -1,6 +1,11 @@
-import { UUID } from "src/shared/domain/value-objects/uuid.vo";
+import { UUID } from "../../../../shared/domain/value-objects/uuid.vo";
 import SourceType from "../../shared/value-objects/source-type.vo";
 import { StartRegistrationDto } from "../../shared/dto/start-registration.dto";
+
+enum SourceTypeEnum {
+    PHONE_NUMBER = 'PHONE_NUMBER',
+    EMAIL = 'EMAIL',
+};
 
 export type RegistrationSourceType = {
     id?: UUID | string;
@@ -22,6 +27,8 @@ export default class RegistrationSource {
         props.sourceType = SourceType.parse(props.sourceType);
 
         Object.assign(this, props);
+
+        this.validate();
     }
 
     public getProperty(property: (keyof RegistrationSourceType)) {
@@ -33,5 +40,21 @@ export default class RegistrationSource {
             sourceType: new SourceType(props.source_type),
             source: props.source
         })))
+    }
+
+    private validate(): boolean {
+        if(!(Object.values(SourceTypeEnum).includes(this.sourceType.toString() as SourceTypeEnum))) {
+            throw new Error(`Invalid source type: ${this.sourceType}`);
+        }
+
+        if(this.sourceType.toString() === SourceTypeEnum.EMAIL && !((/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i).test(this.source))) {
+            throw new Error(`Invalid email format: ${this.source}`);
+        }
+
+        if(this.sourceType.toString() === SourceTypeEnum.PHONE_NUMBER && !((/^\+?[\d\s\-()]{7,20}$/).test(this.source))) {
+            throw new Error(`Invalid phone number format: ${this.source}`);
+        }
+
+        return true;
     }
 }

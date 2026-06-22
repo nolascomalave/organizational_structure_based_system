@@ -1,4 +1,3 @@
-import { UUID } from "src/shared/domain/value-objects/uuid.vo";
 import RegistrationRepository, { SavePropsType } from "../../../domain/repositories/registration.repository";
 import type RegistrationSourceRepository from "../../../domain/repositories/registration-source.repository";
 import { DrizzleService } from "src/lib/drizzle.service";
@@ -6,11 +5,10 @@ import { Inject, Injectable } from "@nestjs/common";
 import { REGISTRATION_SOURCE_REPOSITORY } from "../../../domain/repositories/registration-source.repository";
 import Registration from "src/modules/auth/domain/aggregates/registration.aggregate";
 import { DrizzleDBOrTransaction } from "src/lib/drizzle-transaction";
-import { registration as registrationTable, registrationSource as registrationSourceTable } from "src/models/schema";
+import { registration as registrationTable } from "src/models/schema";
 import RegistrationSource from "src/modules/auth/domain/entities/registration-source.entity";
 import { IpAddress } from "src/modules/auth/shared/value-objects/ip-address.vo";
 import { and, sql } from "drizzle-orm";
-import { registrationSourceRelations } from "src/models/relations";
 
 @Injectable()
 export class DrizzleRegistrationRepository implements RegistrationRepository {
@@ -56,7 +54,7 @@ export class DrizzleRegistrationRepository implements RegistrationRepository {
             if(foundRegistration) {
                 return new Registration({
                     id: foundRegistration.id,
-                    ipAddress: new IpAddress(foundRegistration.ip_address),
+                    ipAddress: new IpAddress(foundRegistration.ipAddress),
                     registrationSource: new RegistrationSource({
                         id: foundRegistration.registrationSource.id,
                         source: foundRegistration.registrationSource.source,
@@ -73,12 +71,12 @@ export class DrizzleRegistrationRepository implements RegistrationRepository {
 
             const registrationResult = (await db.insert(registrationTable)
                 .values({
-                    id: sql`uuidv7()`,
+                    // id: sql`uuidv7()`,
                     ipAddress: registration.ipAddress.toString(),
-                    registrationSource: registration.registrationSource.id?.toString(),
+                    registrationSourceId: registration.registrationSource.id?.toString(),
                     confirmRegistrationAt: registration.confirmRegistrationAt,
-                    createdAt: sql`now()`,
-                    expiredAt: sql`(now() + '00:30:00'::interval)`,
+                    // createdAt: sql`now()`,
+                    // expiredAt: sql`(now() + '00:30:00'::interval)`,
                     deletedAt: null
                 }).returning())[0];
 

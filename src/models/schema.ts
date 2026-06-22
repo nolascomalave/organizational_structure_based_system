@@ -1465,7 +1465,7 @@ export const registration = osbs.table("registration", {
 			foreignColumns: [registrationSource.id],
 			name: "registration_fkey_registration_source"
 		}),
-	unique("registration_unique").on(table.ipAddress, table.registrationSourceId),
+	// unique("registration_unique").on(table.ipAddress, table.registrationSourceId),
 ]);
 
 export const registrationSourceVerification = osbs.table("registration_source_verification", {

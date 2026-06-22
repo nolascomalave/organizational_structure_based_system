@@ -22,6 +22,7 @@ export class DrizzleRegistrationSourceRepository implements RegistrationSourceRe
             let source = await this.findRecordBySource(props, db);
 
             if(!source) {
+                // Validate Source Here!
                 const newSource = (await db.insert(registrationSourceTable)
                     .values({
                         sourceType: props.sourceType,
@@ -70,6 +71,10 @@ export class DrizzleRegistrationSourceRepository implements RegistrationSourceRe
                     )
                 )
             )[0] ?? null;
+
+            if(!registrationSource) {
+                return null;
+            }
 
             return new RegistrationSource({
                 id: registrationSource.id,
