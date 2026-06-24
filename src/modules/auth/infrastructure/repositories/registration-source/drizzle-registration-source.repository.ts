@@ -7,6 +7,7 @@ import { SourceType as SourceTypeEnum, registrationSource as registrationSourceT
 import { and, eq } from "drizzle-orm";
 import { DrizzleDBOrTransaction } from "src/lib/drizzle-transaction";
 import RegistrationSource from "src/modules/auth/domain/entities/registration-source.entity";
+import DatabaseException from "src/shared/infrastructure/exceptions/database.exception";
 
 @Injectable()
 export class DrizzleRegistrationSourceRepository implements RegistrationSourceRepository {
@@ -18,72 +19,80 @@ export class DrizzleRegistrationSourceRepository implements RegistrationSourceRe
         sourceType: string;
         source: string;
     } | RegistrationSource, tx?: DrizzleDBOrTransaction): Promise<RegistrationSource> {
-        return this.drizzleDB.handleTransaction({ tx, beginTransaction: true }, async (db) => {
-            let source = await this.findRecordBySource(props, db);
+        try {
+            return this.drizzleDB.handleTransaction({ tx, beginTransaction: true }, async (db) => {
+                let source = await this.findRecordBySource(props, db);
 
-            if(!source) {
-                // Validate Source Here!
-                const newSource = (await db.insert(registrationSourceTable)
-                    .values({
-                        sourceType: props.sourceType,
-                        source: props.source
-                    }).returning())[0];
+                if(!source) {
+                    // Validate Source Here!
+                    const newSource = (await db.insert(registrationSourceTable)
+                        .values({
+                            sourceType: props.sourceType,
+                            source: props.source
+                        }).returning())[0];
+
+                    return new RegistrationSource({
+                        id: newSource.id,
+                        sourceType: newSource.sourceType,
+                        source: newSource.source,
+                        createdAt: newSource.createdAt,
+                        deletedAt: newSource.deletedAt
+                    });
+                }
+
+                const updatedSource = (await db.update(registrationSourceTable)
+                    .set({ deletedAt: null })
+                    .where(
+                        and(
+                            eq(registrationSourceTable.sourceType, props.sourceType as SourceTypeEnum),
+                            eq(registrationSourceTable.source, props.source)
+                        )
+                    ).returning())[0];
 
                 return new RegistrationSource({
-                    id: newSource.id,
-                    sourceType: newSource.sourceType,
-                    source: newSource.source,
-                    createdAt: newSource.createdAt,
-                    deletedAt: newSource.deletedAt
+                    id: updatedSource.id,
+                    sourceType: updatedSource.sourceType,
+                    source: updatedSource.source,
+                    createdAt: updatedSource.createdAt,
+                    deletedAt: updatedSource.deletedAt
                 });
-            }
-
-            const updatedSource = (await db.update(registrationSourceTable)
-                .set({ deletedAt: null })
-                .where(
-                    and(
-                        eq(registrationSourceTable.sourceType, props.sourceType as SourceTypeEnum),
-                        eq(registrationSourceTable.source, props.source)
-                    )
-                ).returning())[0];
-
-            return new RegistrationSource({
-                id: updatedSource.id,
-                sourceType: updatedSource.sourceType,
-                source: updatedSource.source,
-                createdAt: updatedSource.createdAt,
-                deletedAt: updatedSource.deletedAt
             });
-        })
+        } catch (error) {
+            throw new DatabaseException(`Failed to save registration source.`, error);
+        }
     }
 
     private async findRecordBySource(props: {
         sourceType: string;
         source: string;
     } | RegistrationSource, tx?: DrizzleDBOrTransaction): Promise<RegistrationSource | null> {
-        return this.drizzleDB.handleTransaction(tx, async (db) => {
-            const registrationSource = (await db.select()
-                .from(registrationSourceTable)
-                .where(
-                    and(
-                        eq(registrationSourceTable.sourceType, props.sourceType as SourceTypeEnum),
-                        eq(registrationSourceTable.source, props.source)
+        try {
+            return this.drizzleDB.handleTransaction(tx, async (db) => {
+                const registrationSource = (await db.select()
+                    .from(registrationSourceTable)
+                    .where(
+                        and(
+                            eq(registrationSourceTable.sourceType, props.sourceType as SourceTypeEnum),
+                            eq(registrationSourceTable.source, props.source)
+                        )
                     )
-                )
-            )[0] ?? null;
+                )[0] ?? null;
 
-            if(!registrationSource) {
-                return null;
-            }
+                if(!registrationSource) {
+                    return null;
+                }
 
-            return new RegistrationSource({
-                id: registrationSource.id,
-                sourceType: registrationSource.sourceType,
-                source: registrationSource.source,
-                createdAt: registrationSource.createdAt,
-                deletedAt: registrationSource.deletedAt
+                return new RegistrationSource({
+                    id: registrationSource.id,
+                    sourceType: registrationSource.sourceType,
+                    source: registrationSource.source,
+                    createdAt: registrationSource.createdAt,
+                    deletedAt: registrationSource.deletedAt
+                });
             });
-        });
+        } catch (error) {
+            throw new DatabaseException(`Failed to find registration source by source.`, error);
+        }
     }
 
     public async findBySource(props: StartRegistrationDto, tx?: DrizzleDBOrTransaction): Promise<RegistrationSource | null> {

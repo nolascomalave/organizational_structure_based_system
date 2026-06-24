@@ -9,6 +9,7 @@ import { registration as registrationTable } from "src/models/schema";
 import RegistrationSource from "src/modules/auth/domain/entities/registration-source.entity";
 import { IpAddress } from "src/modules/auth/shared/value-objects/ip-address.vo";
 import { and, sql } from "drizzle-orm";
+import DatabaseException from "src/shared/infrastructure/exceptions/database.exception";
 
 @Injectable()
 export class DrizzleRegistrationRepository implements RegistrationRepository {
@@ -19,77 +20,81 @@ export class DrizzleRegistrationRepository implements RegistrationRepository {
     ) {}
 
     public async save(props: SavePropsType, tx?: DrizzleDBOrTransaction): Promise<Registration> {
-        return this.drizzleDB.handleTransaction({ tx: tx, beginTransaction: true }, async (db) => {
-            const registration = (props instanceof Registration
-                ? props
-                : (new Registration({
-                    ipAddress: (new IpAddress(props.ipAddress)),
-                    registrationSource: (("registrationSource" in props)
-                        ? props.registrationSource
-                        : new RegistrationSource({
-                            source: props.source,
-                            sourceType: props.source_type
-                        })
-                    )
-                }))
-            );
+        try {
+            return this.drizzleDB.handleTransaction({ tx: tx, beginTransaction: true }, async (db) => {
+                const registration = (props instanceof Registration
+                    ? props
+                    : (new Registration({
+                        ipAddress: (new IpAddress(props.ipAddress)),
+                        registrationSource: (("registrationSource" in props)
+                            ? props.registrationSource
+                            : new RegistrationSource({
+                                source: props.source,
+                                sourceType: props.source_type
+                            })
+                        )
+                    }))
+                );
 
-            registration.setProperty("registrationSource", await this.registrationSourceRepository.save(registration.registrationSource, db));
+                registration.setProperty("registrationSource", await this.registrationSourceRepository.save(registration.registrationSource, db));
 
-            /* let foundRegistration = await db.query.registration.findFirst({
-                where: {
-                    ipAddress: registration.ipAddress.toString()
-                },
-                with: { registrationSource: true }
-            }); */
-            let foundRegistration = await db.query.registration.findFirst({
-                where: (registrationTable, { eq }) => and(
-                    eq(registrationTable.ipAddress, registration.ipAddress.toString()),
-                    eq(registrationTable.registrationSourceId, registration.registrationSource.id?.toString()),
-                    sql`(NOW() BETWEEN ${registrationTable.createdAt} AND ${registrationTable.expiredAt})`
-                ),
-                with: { registrationSource: true }
-            });
-
-            if(foundRegistration) {
-                return new Registration({
-                    id: foundRegistration.id,
-                    ipAddress: new IpAddress(foundRegistration.ipAddress),
-                    registrationSource: new RegistrationSource({
-                        id: foundRegistration.registrationSource.id,
-                        source: foundRegistration.registrationSource.source,
-                        sourceType: foundRegistration.registrationSource.sourceType,
-                        createdAt: foundRegistration.registrationSource.createdAt,
-                        deletedAt: foundRegistration.registrationSource.deletedAt
-                    }),
-                    confirmRegistrationAt: foundRegistration.confirm_registration_at,
-                    createdAt: foundRegistration.createdAt,
-                    expiredAt: foundRegistration.expiredAt,
-                    deletedAt: foundRegistration.deletedAt
+                /* let foundRegistration = await db.query.registration.findFirst({
+                    where: {
+                        ipAddress: registration.ipAddress.toString()
+                    },
+                    with: { registrationSource: true }
+                }); */
+                let foundRegistration = await db.query.registration.findFirst({
+                    where: (registrationTable, { eq }) => and(
+                        eq(registrationTable.ipAddress, registration.ipAddress.toString()),
+                        eq(registrationTable.registrationSourceId, registration.registrationSource.id?.toString()),
+                        sql`(NOW() BETWEEN ${registrationTable.createdAt} AND ${registrationTable.expiredAt})`
+                    ),
+                    with: { registrationSource: true }
                 });
-            }
 
-            const registrationResult = (await db.insert(registrationTable)
-                .values({
-                    // id: sql`uuidv7()`,
-                    ipAddress: registration.ipAddress.toString(),
-                    registrationSourceId: registration.registrationSource.id?.toString(),
-                    confirmRegistrationAt: registration.confirmRegistrationAt,
-                    // createdAt: sql`now()`,
-                    // expiredAt: sql`(now() + '00:30:00'::interval)`,
-                    deletedAt: null
-                }).returning())[0];
+                if(foundRegistration) {
+                    return new Registration({
+                        id: foundRegistration.id,
+                        ipAddress: new IpAddress(foundRegistration.ipAddress),
+                        registrationSource: new RegistrationSource({
+                            id: foundRegistration.registrationSource.id,
+                            source: foundRegistration.registrationSource.source,
+                            sourceType: foundRegistration.registrationSource.sourceType,
+                            createdAt: foundRegistration.registrationSource.createdAt,
+                            deletedAt: foundRegistration.registrationSource.deletedAt
+                        }),
+                        confirmRegistrationAt: foundRegistration.confirm_registration_at,
+                        createdAt: foundRegistration.createdAt,
+                        expiredAt: foundRegistration.expiredAt,
+                        deletedAt: foundRegistration.deletedAt
+                    });
+                }
 
-            return new Registration({
-                id: registrationResult.id,
-                ipAddress: registration.ipAddress,
-                registrationSource: registration.registrationSource,
-                confirmRegistrationAt: registrationResult.confirmRegistrationAt,
-                createdAt: registrationResult.createdAt,
-                expiredAt: registrationResult.expiredAt,
-                deletedAt: registrationResult.deletedAt
+                const registrationResult = (await db.insert(registrationTable)
+                    .values({
+                        // id: sql`uuidv7()`,
+                        ipAddress: registration.ipAddress.toString(),
+                        registrationSourceId: registration.registrationSource.id?.toString(),
+                        confirmRegistrationAt: registration.confirmRegistrationAt,
+                        // createdAt: sql`now()`,
+                        // expiredAt: sql`(now() + '00:30:00'::interval)`,
+                        deletedAt: null
+                    }).returning())[0];
+
+                return new Registration({
+                    id: registrationResult.id,
+                    ipAddress: registration.ipAddress,
+                    registrationSource: registration.registrationSource,
+                    confirmRegistrationAt: registrationResult.confirmRegistrationAt,
+                    createdAt: registrationResult.createdAt,
+                    expiredAt: registrationResult.expiredAt,
+                    deletedAt: registrationResult.deletedAt
+                });
             });
-        });
+        } catch (error) {
+            throw new DatabaseException(`Failed to save registration.`, error);
+        }
     }
 
     /* public async findById(id: string, tx?: DrizzleDBOrTransaction): Promise<Registration> {
