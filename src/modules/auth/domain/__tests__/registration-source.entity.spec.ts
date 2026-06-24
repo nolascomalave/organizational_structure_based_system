@@ -1,5 +1,5 @@
 // domain/__tests__/registration-source.entity.spec.ts
-import RegistrationSource from './registration-source.entity';
+import RegistrationSource from '../entities/registration-source.entity';
 
 describe('RegistrationSource', () => {
   it('debe crear una fuente válida con email', () => {

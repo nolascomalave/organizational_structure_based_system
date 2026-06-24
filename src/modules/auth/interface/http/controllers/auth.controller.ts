@@ -3,7 +3,7 @@ import { formatValidationErrors } from 'src/shared/interface/http/controllers/ex
 import { StartRegistrationDto } from '../../../shared/dto/start-registration.dto';
 import StartRegistrationCommand from 'src/modules/auth/application/commands/start-registration/command';
 import { CommandBus } from '@nestjs/cqrs';
-// import { AuthService } from '../../../auth.service._eliminar';
+import SendVerificationSourceCodeDto from 'src/modules/auth/shared/dto/send-verification-source-code.dto';
 
 @Controller("/auth")
 export class AuthController {
@@ -12,7 +12,7 @@ export class AuthController {
         private readonly commandBus: CommandBus
     ) {}
 
-    @Post("/registrate-system_subscription")
+    @Post("/start-registration")
     @HttpCode(HttpStatus.CREATED)
     @UsePipes(new ValidationPipe({
         exceptionFactory: (errors) => (new BadRequestException(formatValidationErrors(errors))),
@@ -27,4 +27,15 @@ export class AuthController {
             }))
         };
     }
+
+    @Post("/send-verification-source-code")
+    @HttpCode(HttpStatus.CREATED)
+    async sendVerificationSourceCode(@Body() props: SendVerificationSourceCodeDto) {
+    }
+
+    /* @Post("/create-system_subscription")
+    @HttpCode(HttpStatus.CREATED)
+    async createSystemSubscription() {
+
+    } */
 }
