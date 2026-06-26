@@ -1,13 +1,13 @@
 // import RegistrationSource from "../../domain/entities/registration-source.entity";
 import RegistrationSourceRepository, { SaveReturnType } from "../../../domain/repositories/registration-source.repository";
 import { Injectable } from "@nestjs/common";
-import { DrizzleService } from "src/lib/drizzle.service";
+import { DrizzleService } from "../../../../../lib/drizzle.service";
 import { StartRegistrationDto } from "../../../shared/dto/start-registration.dto";
-import { SourceType as SourceTypeEnum, registrationSource as registrationSourceTable } from "src/models/schema";
+import { SourceType as SourceTypeEnum, registrationSource as registrationSourceTable } from "../../../../../models/schema";
 import { and, eq } from "drizzle-orm";
-import { DrizzleDBOrTransaction } from "src/lib/drizzle-transaction";
-import RegistrationSource from "src/modules/auth/domain/entities/registration-source.entity";
-import DatabaseException from "src/shared/infrastructure/exceptions/database.exception";
+import { DrizzleDBOrTransaction } from "../../../../../lib/drizzle-transaction";
+import RegistrationSource from "../../../domain/entities/registration-source.entity";
+import DatabaseException from "../../../../../shared/infrastructure/exceptions/database.exception";
 
 @Injectable()
 export class DrizzleRegistrationSourceRepository implements RegistrationSourceRepository {

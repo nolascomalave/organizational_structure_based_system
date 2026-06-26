@@ -1,15 +1,15 @@
 import RegistrationRepository, { SavePropsType } from "../../../domain/repositories/registration.repository";
 import type RegistrationSourceRepository from "../../../domain/repositories/registration-source.repository";
-import { DrizzleService } from "src/lib/drizzle.service";
+import { DrizzleService } from "../../../../../lib/drizzle.service";
 import { Inject, Injectable } from "@nestjs/common";
 import { REGISTRATION_SOURCE_REPOSITORY } from "../../../domain/repositories/registration-source.repository";
-import Registration from "src/modules/auth/domain/aggregates/registration.aggregate";
-import { DrizzleDBOrTransaction } from "src/lib/drizzle-transaction";
-import { registration as registrationTable } from "src/models/schema";
-import RegistrationSource from "src/modules/auth/domain/entities/registration-source.entity";
-import { IpAddress } from "src/modules/auth/shared/value-objects/ip-address.vo";
+import Registration from "../../../domain/aggregates/registration.aggregate";
+import { DrizzleDBOrTransaction } from "../../../../../lib/drizzle-transaction";
+import { registration as registrationTable } from "../../../../../models/schema";
+import RegistrationSource from "../../../domain/entities/registration-source.entity";
+import { IpAddress } from "../../../shared/value-objects/ip-address.vo";
 import { and, sql } from "drizzle-orm";
-import DatabaseException from "src/shared/infrastructure/exceptions/database.exception";
+import DatabaseException from "../../../../../shared/infrastructure/exceptions/database.exception";
 
 @Injectable()
 export class DrizzleRegistrationRepository implements RegistrationRepository {

@@ -1,4 +1,4 @@
-import { UUID } from "src/shared/domain/value-objects/uuid.vo";
+import { UUID } from "../../../../shared/domain/value-objects/uuid.vo";
 import RegistrationSource from "../entities/registration-source.entity";
 import { IpAddress } from "../../shared/value-objects/ip-address.vo";
 

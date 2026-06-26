@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsIn, IsNotEmpty, IsString } from 'class-validator';
-import { sourceType } from 'src/models/schema';
+import { sourceType } from '../../../../models/schema';
 
 export class StartRegistrationDto {
     // @IsString()

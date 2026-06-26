@@ -1,9 +1,9 @@
 import { BadRequestException, Body, Controller, HttpCode, HttpStatus, Ip, Post, UsePipes, ValidationPipe } from '@nestjs/common';
-import { formatValidationErrors } from 'src/shared/interface/http/controllers/exceptionFactory';
+import { formatValidationErrors } from '../../../../../shared/interface/http/controllers/exceptionFactory';
 import { StartRegistrationDto } from '../../../shared/dto/start-registration.dto';
-import StartRegistrationCommand from 'src/modules/auth/application/commands/start-registration/command';
+import StartRegistrationCommand from '../../../application/commands/start-registration/command';
 import { CommandBus } from '@nestjs/cqrs';
-import SendVerificationSourceCodeDto from 'src/modules/auth/shared/dto/send-verification-source-code.dto';
+import SendVerificationSourceCodeDto from '../../../shared/dto/send-verification-source-code.dto';
 
 @Controller("/auth")
 export class AuthController {

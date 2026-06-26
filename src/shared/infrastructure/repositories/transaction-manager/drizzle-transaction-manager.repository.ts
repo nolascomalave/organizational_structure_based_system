@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { DrizzleTransaction } from "src/lib/drizzle-transaction";
-import { DrizzleService } from "src/lib/drizzle.service";
-import TransactionManagerRepository from "src/shared/application/repositories/transaction-manager.repository";
+import { DrizzleService, CallbackHandlerDB, HandleTransactionProps } from "../../../../lib/drizzle.service";
+import TransactionManagerRepository from "../../../application/repositories/transaction-manager.repository";
 
 @Injectable()
 export class DrizzleTransactionManagerRepository implements TransactionManagerRepository {
@@ -9,7 +8,18 @@ export class DrizzleTransactionManagerRepository implements TransactionManagerRe
         private readonly drizzleDB: DrizzleService
     ) {}
 
-    public async execute<T>(callback: (tx: DrizzleTransaction) => Promise<T>): Promise<T> {
-        return await this.drizzleDB.db.transaction(callback);
+
+    // Overload (Public signs)
+    async execute<T>(callback: CallbackHandlerDB<T>): Promise<T>
+    async execute<T>(opts: HandleTransactionProps, callback: CallbackHandlerDB<T>): Promise<T>
+    // Implementation (Intern sign)
+    async execute<T>(opts: HandleTransactionProps | CallbackHandlerDB<T>, callback? : CallbackHandlerDB<T>): Promise<T> {
+        if(typeof opts === "function") {
+            return await this.drizzleDB.handleTransaction({
+                beginTransaction: true
+            }, opts);
+        }
+
+        return this.drizzleDB.handleTransaction({ ...opts, beginTransaction: true }, callback as CallbackHandlerDB<T>);
     }
 }

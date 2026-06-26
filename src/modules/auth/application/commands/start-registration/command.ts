@@ -1,4 +1,4 @@
-import { StartRegistrationDto } from "src/modules/auth/shared/dto/start-registration.dto";
+import { StartRegistrationDto } from "../../../shared/dto/start-registration.dto";
 
 class StartRegistrationCommandProps extends StartRegistrationDto {
     ip_address: string;

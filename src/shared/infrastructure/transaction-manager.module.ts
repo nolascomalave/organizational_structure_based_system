@@ -1,5 +1,5 @@
 import { Global, Module } from "@nestjs/common";
-import { TRANSACTION_MANAGER_REPOSITORY } from "src/shared/application/repositories/transaction-manager.repository";
+import { TRANSACTION_MANAGER_REPOSITORY } from "../application/repositories/transaction-manager.repository";
 import { TransactionManagerRepository } from "./repositories";
 
 @Global()

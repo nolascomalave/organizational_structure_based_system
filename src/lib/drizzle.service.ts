@@ -6,7 +6,16 @@ import { DrizzleDBOrTransaction, DrizzleTransaction } from './drizzle-transactio
 import * as schemas from '../models/schema';
 import * as relations from '../models/relations';
 
-type CallbackHandlerDB<T> = (db: DrizzleDBOrTransaction) => Promise<T>;
+export type CallbackHandlerDB<T> = (db: DrizzleDBOrTransaction) => Promise<T>;
+export type HandleTransactionProps = DrizzleDBOrTransaction | undefined | ({ tx: DrizzleDBOrTransaction } | { beginTransaction: boolean } | { tx: DrizzleDBOrTransaction, beginTransaction: boolean } & { commit?: boolean });
+
+class DrizzleNoCommitableResult<T> {
+    constructor (readonly value: T) {}
+
+    getResult() {
+        return this.value;
+    }
+}
 
 @Injectable()
 export class DrizzleService implements OnModuleDestroy {
@@ -49,22 +58,47 @@ export class DrizzleService implements OnModuleDestroy {
         await this.queryClient.end();
     }
 
-    async handleTransaction<T>(props: DrizzleDBOrTransaction | undefined | { tx: DrizzleDBOrTransaction } | { beginTransaction: boolean } | { tx: DrizzleDBOrTransaction, beginTransaction: boolean }, callback: CallbackHandlerDB<T>): Promise<T> {
-        if(!!props && (typeof props === 'object') && (('beginTransaction' in props) || ('tx' in props))) {
-            if(props.beginTransaction && (!props.tx || !props.tx.isTransaction)) {
-                return await (!!props.tx ? props.tx : this).transaction(async (tx) => await callback(tx));
-            }
+    async handleTransaction<T>(props: HandleTransactionProps, callback: CallbackHandlerDB<T>): Promise<T> {
+        let commit = true;
 
-            return await callback(props.tx ? this.db : props.tx);
+        if(!!props && (typeof props === 'object')) {
+            commit = props.commit ?? true;
+
+            if(('beginTransaction' in props) || ('tx' in props)) {
+                if(props.beginTransaction && (!props.tx || !props.tx.isTransaction)) {
+                    return (await (!!props.tx ? props.tx : this).transaction(async (tx) => await callback(tx), !props.tx ? commit : undefined));
+                }
+
+                return (await callback(props.tx ? this.db : props.tx));
+            }
         }
 
         return (await callback(!props ? this.db : props));
     }
 
-    private async transaction<T>(callback: (tx: DrizzleTransaction) => Promise<T>): Promise<T> {
-        return await this.db.transaction(async (tx) => {
-            tx.isTransaction = true; // Marca la transacción para que los repositorios puedan detectarla
-            return await callback(tx);
-        });
+    private async transaction<T>(callback: (txProp: DrizzleTransaction) => Promise<T>, commit: boolean = true): Promise<T> {
+        let result: T;
+
+        // If NODE_ENV == "test", the transaction must not be submitted.
+        commit = commit === true && (process.env.NODE_ENV !== "test");
+
+        try {
+            result = await this.db.transaction(async (tx) => {
+                tx.isTransaction = true; // Marca la transacción para que los repositorios puedan detectarla
+                return await callback(tx);
+            });
+
+            if(!commit) {
+                throw new DrizzleNoCommitableResult<T>(result);
+            }
+
+            return result;
+        } catch(e) {
+            if(e instanceof DrizzleNoCommitableResult) {
+                return e.getResult();
+            }
+
+            throw e;
+        }
     }
 }

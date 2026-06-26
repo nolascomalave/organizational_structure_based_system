@@ -4,7 +4,6 @@ import { AuthController } from "./interface/http/controllers/auth.controller";
 import StartRegistrationHandler from "./application/commands/start-registration/handler";
 import { RegistrationRepository } from "./infrastructure/repositories";
 import { RegistrationSourceRepository } from "./infrastructure/repositories";
-import { TransactionManagerRepository } from "src/shared/infrastructure/repositories/";
 import { REGISTRATION_REPOSITORY } from "./domain/repositories/registration.repository";
 import { REGISTRATION_SOURCE_REPOSITORY } from "./domain/repositories/registration-source.repository";
 
