@@ -6,6 +6,7 @@ import { RegistrationRepository } from "./infrastructure/repositories";
 import { RegistrationSourceRepository } from "./infrastructure/repositories";
 import { REGISTRATION_REPOSITORY } from "./domain/repositories/registration.repository";
 import { REGISTRATION_SOURCE_REPOSITORY } from "./domain/repositories/registration-source.repository";
+import { UtilsModule } from "src/shared/infrastructure/utils.module";
 
 @Module({
     controllers: [
@@ -22,6 +23,9 @@ import { REGISTRATION_SOURCE_REPOSITORY } from "./domain/repositories/registrati
             useClass: RegistrationSourceRepository, // implementación concreta
         },
     ],
-    imports: [CqrsModule],
+    imports: [
+        CqrsModule,
+        UtilsModule
+    ],
 })
 export class AuthModule {}

@@ -1,5 +1,5 @@
 export default class InfrastructureException extends Error {
     constructor (message) {
-        super();
+        super(message);
     }
 }
