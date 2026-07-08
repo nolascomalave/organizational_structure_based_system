@@ -56,7 +56,7 @@ export default class RegistrationSource {
             throw new InvalidEmailFormatException(this.source);
         }
 
-        if(this.sourceType.toString() === SourceTypeEnum.PHONE_NUMBER && !((/^\+?[\d\s\-()]{7,20}$/).test(this.source))) {
+        if(this.sourceType.toString() === SourceTypeEnum.PHONE_NUMBER && !((/^\+[1-9]\d{1,14}$/).test(this.source))) {
             // throw new Error(`Invalid phone number format: ${this.source}`);
             throw new InvalidPhoneNumberFormatException(this.source);
         }

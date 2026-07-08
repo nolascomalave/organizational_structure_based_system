@@ -3,6 +3,8 @@ import { AppService } from './app.service';
 import { DrizzleModule } from './lib/drizzle.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TransactionManagerModule } from './shared/infrastructure/transaction-manager.module';
+import { PhoneNumberModule } from './shared/infrastructure/phone-number.module';
+import { MailerModule } from './shared/infrastructure/mailer.module';
 
 @Module({
   imports: [
@@ -13,7 +15,9 @@ import { TransactionManagerModule } from './shared/infrastructure/transaction-ma
     AuthModule,
 
     // Application Modules:
-    TransactionManagerModule
+    TransactionManagerModule,
+    PhoneNumberModule,
+    MailerModule
   ],
   providers: [
     AppService

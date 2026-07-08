@@ -4,10 +4,11 @@ import { Injectable } from "@nestjs/common";
 import { DrizzleService } from "../../../../../lib/drizzle.service";
 import { StartRegistrationDto } from "../../../shared/dto/start-registration.dto";
 import { SourceType as SourceTypeEnum, registrationSource as registrationSourceTable } from "../../../../../models/schema";
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { DrizzleDBOrTransaction } from "../../../../../lib/drizzle-transaction";
 import RegistrationSource from "../../../domain/entities/registration-source.entity";
 import DatabaseException from "../../../../../shared/infrastructure/exceptions/database.exception";
+import { UUID } from "src/shared/domain/value-objects/uuid.vo";
 
 @Injectable()
 export class DrizzleRegistrationSourceRepository implements RegistrationSourceRepository {
@@ -44,10 +45,12 @@ export class DrizzleRegistrationSourceRepository implements RegistrationSourceRe
                     .set({ deletedAt: null })
                     .where(
                         and(
+                            eq(registrationSourceTable.id, (source.id as UUID)?.toString())/* ,
                             eq(registrationSourceTable.sourceType, props.sourceType as SourceTypeEnum),
-                            eq(registrationSourceTable.source, props.source)
+                            eq(registrationSourceTable.source, props.source) */
                         )
-                    ).returning())[0];
+                    )
+                    .returning())[0];
 
                 return new RegistrationSource({
                     id: updatedSource.id,
@@ -73,9 +76,11 @@ export class DrizzleRegistrationSourceRepository implements RegistrationSourceRe
                     .where(
                         and(
                             eq(registrationSourceTable.sourceType, props.sourceType as SourceTypeEnum),
-                            eq(registrationSourceTable.source, props.source)
+                            // eq(registrationSourceTable.source, props.source)
+                            sql`LOWER(${registrationSourceTable.source}) = LOWER(${props.source})`
                         )
                     )
+                    .orderBy(asc(registrationSourceTable.createdAt))
                 )[0] ?? null;
 
                 if(!registrationSource) {

@@ -1,2 +1,3 @@
 export * from './drizzle.repository';
-export * from './utils.repository';
+export * from './phone-number.repository';
+export * from './mailer.repository';

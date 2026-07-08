@@ -12,4 +12,4 @@ import { PHONE_NUMBER_REPOSITORY } from "../application/repositories/phone-numbe
     ],
     exports: [PHONE_NUMBER_REPOSITORY],
 })
-export class UtilsModule {}
+export class PhoneNumberModule {}
