@@ -1,15 +1,17 @@
 import { Global, Module } from "@nestjs/common";
-import { PhoneNumberRepository } from "./repositories";
-import { PHONE_NUMBER_REPOSITORY } from "../application/repositories/phone-number.repository";
+import { MailerRepository } from "./repositories";
+import { MAILER_REPOSITORY } from "../application/repositories/mailer.repository";
+import { ConfigModule } from "@nestjs/config";
 
 @Global()
 @Module({
+    imports: [ConfigModule.forRoot()],
     providers: [
         {
-            provide: PHONE_NUMBER_REPOSITORY, // token que se inyecta en el handler
-            useClass: PhoneNumberRepository, // implementación concreta
+            provide: MAILER_REPOSITORY, // token que se inyecta en el handler
+            useClass: MailerRepository, // implementación concreta
         },
     ],
-    exports: [PHONE_NUMBER_REPOSITORY],
+    exports: [MAILER_REPOSITORY],
 })
 export class MailerModule {}

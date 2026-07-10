@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppService } from './app.service';
 import { DrizzleModule } from './lib/drizzle.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { TransactionManagerModule } from './shared/infrastructure/transaction-manager.module';
 import { PhoneNumberModule } from './shared/infrastructure/phone-number.module';
 import { MailerModule } from './shared/infrastructure/mailer.module';
+import { DebugService } from './debug.service';
+import { DebugController } from './debug.controller';
 
 @Module({
   imports: [
@@ -19,8 +20,11 @@ import { MailerModule } from './shared/infrastructure/mailer.module';
     PhoneNumberModule,
     MailerModule
   ],
+  controllers: [
+    DebugController
+  ],
   providers: [
-    AppService
+    DebugService
   ],
 })
 export class AppModule {}

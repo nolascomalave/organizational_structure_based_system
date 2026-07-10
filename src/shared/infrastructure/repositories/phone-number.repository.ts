@@ -1,1 +1,0 @@
-export { LibPhoneNumberPhoneNumberRepository as PhoneNumberRepository } from "./phone-number/libphonenumber-phone-number.repository";

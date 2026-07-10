@@ -4,11 +4,7 @@ import { StartRegistrationDto } from "../../shared/dto/start-registration.dto";
 import { InvalidEmailFormatException } from "../exceptions/InvalidEmailFormatException.exception";
 import { InvalidPhoneNumberFormatException } from "../exceptions/InvalidPhoneNumberFormatException.exception";
 import { InvalidRegistrationSourceType } from "../exceptions/InvalidRegistrationSourceType.exception";
-
-enum SourceTypeEnum {
-    PHONE_NUMBER = 'PHONE_NUMBER',
-    EMAIL = 'EMAIL',
-};
+import { SourceTypeEnum } from "../../shared/enum/source-type";
 
 export type RegistrationSourceType = {
     id?: UUID | string;

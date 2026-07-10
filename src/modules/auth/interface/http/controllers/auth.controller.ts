@@ -33,6 +33,11 @@ export class AuthController {
     async sendVerificationSourceCode(@Body() props: SendVerificationSourceCodeDto) {
     }
 
+    @Post("/confirm-verification-source-code")
+    @HttpCode(HttpStatus.CREATED)
+    async confirmVerificationSourceCode(@Body() props: SendVerificationSourceCodeDto) {
+    }
+
     /* @Post("/create-system_subscription")
     @HttpCode(HttpStatus.CREATED)
     async createSystemSubscription() {

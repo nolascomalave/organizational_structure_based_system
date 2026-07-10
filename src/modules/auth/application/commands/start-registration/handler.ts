@@ -9,7 +9,6 @@ import DatabaseException from '../../../../../shared/infrastructure/exceptions/d
 import InfrastructureException from '../../../../../shared/infrastructure/exceptions/infrastructure.exception';
 import { UUID } from '../../../../../shared/domain/value-objects/uuid.vo';
 import { PHONE_NUMBER_REPOSITORY } from 'src/shared/application/repositories/phone-number.repository';
-import RegistrationSource from 'src/modules/auth/domain/entities/registration-source.entity';
 import { PhoneNumberRepository } from 'src/shared/infrastructure/repositories';
 
 @CommandHandler(StartRegistrationCommand)

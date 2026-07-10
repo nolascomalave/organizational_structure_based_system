@@ -1,1 +1,0 @@
-export { NodemailerMailerRepository as MailerRepository } from "./mailer/nodemailer-mailer.repository";
